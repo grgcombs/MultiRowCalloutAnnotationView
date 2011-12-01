@@ -13,5 +13,8 @@
 #import <MapKit/MapKit.h>
 
 @interface GenericPinAnnotationView : MKPinAnnotationView
++ (GenericPinAnnotationView*)pinViewWithAnnotation:(NSObject <MKAnnotation> *)annotation;
 @property (nonatomic,assign) BOOL preventSelectionChange;
 @end
+
+extern NSString* const GenericPinReuseIdentifier;

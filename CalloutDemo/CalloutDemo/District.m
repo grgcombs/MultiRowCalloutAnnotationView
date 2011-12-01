@@ -59,10 +59,4 @@
     return [self valueForKeyPath:@"representatives.calloutCell"];
 }
 
-// For selection/deselection of the callout in the map view controller, we need to make a copy of the annotation
-- (id)copyWithZone:(NSZone *)zone {
-    District *objectCopy = [[District allocWithZone:zone] initWithCoordinate:_coordinate title:_title representatives:_representatives];
-    return objectCopy;
-}
-
 @end

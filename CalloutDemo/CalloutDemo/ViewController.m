@@ -14,16 +14,15 @@
 #import "District.h"
 #import "GenericPinAnnotationView.h"
 #import "MultiRowCalloutAnnotationView.h"
+#import "MultiRowAnnotation.h"
 
 @interface ViewController()
 @property (nonatomic, retain) MKAnnotationView *selectedAnnotationView;
-@property (nonatomic,retain) District *pinAnnotation;
-@property (nonatomic,retain) District *calloutAnnotation;
+@property (nonatomic,retain) MultiRowAnnotation *calloutAnnotation;
 @end
 
 @implementation ViewController
 @synthesize mapView = _mapView;
-@synthesize pinAnnotation = _pinAnnotation;
 @synthesize calloutAnnotation = _calloutAnnotation;
 @synthesize selectedAnnotationView = _selectedAnnotationView;
 
@@ -31,7 +30,6 @@
     self.mapView = nil;
     self.selectedAnnotationView = nil;
     self.calloutAnnotation = nil;
-    self.pinAnnotation = nil;
     [super dealloc];
 }
 
@@ -41,14 +39,12 @@
     self.mapView = nil;
     self.selectedAnnotationView = nil;
     self.calloutAnnotation = nil;
-    self.pinAnnotation = nil;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.pinAnnotation = [District demoAnnotationFactory];
-    [self.mapView addAnnotation:self.pinAnnotation];
+    [self.mapView addAnnotation:[District demoAnnotationFactory]];
 }
 
 #pragma mark - The Good Stuff
@@ -58,54 +54,58 @@
     if ([annotation isKindOfClass:[MKUserLocation class]])
         return nil;
     
-    NSString *identifier = nil;
-    if (annotation == self.calloutAnnotation) {
-        identifier = @"CalloutAnnotation";
-        MultiRowCalloutAnnotationView *annotationView = (MultiRowCalloutAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+    if (![annotation conformsToProtocol:@protocol(MultiRowAnnotationProtocol)])
+        return nil;
+    NSObject <MultiRowAnnotationProtocol> *newAnnotation = (NSObject <MultiRowAnnotationProtocol> *)annotation;
+    if (newAnnotation == self.calloutAnnotation) {
+        MultiRowCalloutAnnotationView *annotationView = (MultiRowCalloutAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:MultiRowCalloutReuseIdentifier];
         if (!annotationView) {
-            MultiRowAccessoryTappedBlock onTap = ^(MultiRowCalloutCell *cell, UIControl *control, NSDictionary *userData) {
+            annotationView = [MultiRowCalloutAnnotationView calloutWithAnnotation:newAnnotation onCalloutAccessoryTapped:^(MultiRowCalloutCell *cell, UIControl *control, NSDictionary *userData) {
+                // This is where I usually push in a new detail view onto the navigation controller stack, using the object's ID
                 NSLog(@"Representative (%@) with ID '%@' was tapped.", cell.subtitle, [userData objectForKey:@"id"]);
-            };
-            annotationView = [[[MultiRowCalloutAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier onCalloutAccessoryTapped:onTap] autorelease];
+            }];
         }
         else
-            annotationView.annotation = annotation;
+            annotationView.annotation = newAnnotation;
         annotationView.parentAnnotationView = self.selectedAnnotationView;
         annotationView.mapView = mapView;
         return annotationView;
-    } else if (annotation == self.pinAnnotation) {
-        identifier = @"PinAnnotation";
-        GenericPinAnnotationView* annotationView = (GenericPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
-        if (!annotationView) {
-            annotationView = [[[GenericPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier] autorelease];
-            annotationView.pinColor = MKPinAnnotationColorGreen;
-        }
-        annotationView.annotation = annotation;
-        return annotationView;
     }
-    return nil;
+    GenericPinAnnotationView *annotationView = (GenericPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:GenericPinReuseIdentifier];
+    if (!annotationView) {
+        annotationView = [GenericPinAnnotationView pinViewWithAnnotation:newAnnotation];
+    }
+    annotationView.annotation = newAnnotation;
+    return annotationView;
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)aView {
     id<MKAnnotation> annotation = aView.annotation;
     if (!annotation || ![aView isSelected])
         return;
-    if (aView.annotation == self.pinAnnotation) {
-        if (!_calloutAnnotation) {
-            _calloutAnnotation = [_pinAnnotation copy];
+    if ( NO == [annotation isKindOfClass:[MultiRowCalloutCell class]] &&
+        [annotation conformsToProtocol:@protocol(MultiRowAnnotationProtocol)] )
+    {
+        NSObject <MultiRowAnnotationProtocol> *pinAnnotation = (NSObject <MultiRowAnnotationProtocol> *)annotation;
+        if (!self.calloutAnnotation) {
+            _calloutAnnotation = [[MultiRowAnnotation alloc] init];
+            [_calloutAnnotation copyAttributesFromAnnotation:pinAnnotation];
             [mapView addAnnotation:_calloutAnnotation];
         }
         self.selectedAnnotationView = aView;
+        return;
     }
-    else
-        [mapView setCenterCoordinate:annotation.coordinate animated:YES];
+    [mapView setCenterCoordinate:annotation.coordinate animated:YES];
+    self.selectedAnnotationView = aView;
 }
 
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)aView {
-    if (aView.annotation != self.pinAnnotation)
+    if ( NO == [aView.annotation conformsToProtocol:@protocol(MultiRowAnnotationProtocol)] )
+        return;
+    if ([aView.annotation isKindOfClass:[MultiRowAnnotation class]])
         return;
     GenericPinAnnotationView *pinView = (GenericPinAnnotationView *)aView;
-    if (self.calloutAnnotation && pinView.preventSelectionChange == NO) {
+    if (self.calloutAnnotation && !pinView.preventSelectionChange) {
         [mapView removeAnnotation:_calloutAnnotation];
         self.calloutAnnotation = nil;
     }

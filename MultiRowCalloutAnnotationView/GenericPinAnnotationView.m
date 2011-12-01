@@ -12,8 +12,14 @@
 
 #import "GenericPinAnnotationView.h"
 
+NSString* const GenericPinReuseIdentifier = @"GenericPinReuse";
+
 @implementation GenericPinAnnotationView
 @synthesize preventSelectionChange = _preventSelectionChange;
+
++ (GenericPinAnnotationView*)pinViewWithAnnotation:(NSObject <MKAnnotation> *)annotation {
+    return [[[GenericPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:GenericPinReuseIdentifier] autorelease];
+}
 
 - (id)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];

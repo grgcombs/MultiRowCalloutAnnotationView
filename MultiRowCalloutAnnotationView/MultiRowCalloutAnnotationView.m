@@ -19,15 +19,16 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 
+NSString* const MultiRowCalloutReuseIdentifier = @"MultiRowCalloutReuse";
+
 CGFloat const kMultiRowCalloutCellGap = 3;
 
 @interface MultiRowCalloutAnnotationView()
 @property (nonatomic,retain) IBOutlet UILabel *titleLabel;
 @property (nonatomic,assign) CGFloat cellInsetX;
 @property (nonatomic,assign) CGFloat cellOffsetY;
-@property (nonatomic,copy) MultiRowAccessoryTappedBlock onCalloutAccessoryTapped; // copied to cells
-- (void)setTitleWithAnnotation:(id<MKAnnotation>)annotation;
-- (void)setCalloutCellsWithAnnotation:(id<MKAnnotation>)annotation;
+- (void)setTitleWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation;
+- (void)setCalloutCellsWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation;
 - (void)copyAccessoryTappedBlockToCalloutCells;
 
 @property (nonatomic,assign) CGFloat contentHeight;
@@ -38,6 +39,9 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 - (void)prepareFrameSize;
 - (void)prepareOffset;
 - (CGSize)contentSize;
+- (void)enableSibling:(MKAnnotationView *)sibling;
+- (void)preventParentSelectionChange;
+- (void)allowParentSelectionChange;
 
     // Abstract Class Vars and Methods
 @property (nonatomic,readonly) CGSize actualSize; // contentSize + buffers
@@ -65,15 +69,18 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 @synthesize offsetFromParent = _offsetFromParent;
 @synthesize contentHeight = _contentHeight;
 
-- (id)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block {
-    self = [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
++ (MultiRowCalloutAnnotationView *)calloutWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block {
+    return [[[MultiRowCalloutAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:MultiRowCalloutReuseIdentifier onCalloutAccessoryTapped:block] autorelease];
+}
+
+- (id)initWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation reuseIdentifier:(NSString *)reuseIdentifier onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block {
+    self = [super initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:reuseIdentifier];
     if (self) {
         self.contentHeight = 80.0;
         _yShadowOffset = 6;
         self.offsetFromParent = CGPointMake(8, -14); //this works for MKPinAnnotationView
         self.enabled = NO;
         self.backgroundColor = [UIColor clearColor];
-
         self.cellInsetX = 15;
         self.cellOffsetY = 10;
         self.onCalloutAccessoryTapped = block;
@@ -83,7 +90,7 @@ CGFloat const kMultiRowCalloutCellGap = 3;
     return self;
 }
 
-- (id)initWithAnnotation:(id <MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier {
+- (id)initWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation reuseIdentifier:(NSString *)reuseIdentifier {
     self = [self initWithAnnotation:annotation reuseIdentifier:reuseIdentifier onCalloutAccessoryTapped:nil];
     return self;
 }
@@ -102,15 +109,17 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 
 - (void)setAnnotation:(id <MKAnnotation>)annotation {
     [super setAnnotation:annotation];
-    [self setTitleWithAnnotation:annotation];
-    [self setCalloutCellsWithAnnotation:annotation];
+    if (!annotation)
+        return;
+    [self setTitleWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation];
+    [self setCalloutCellsWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation];
     [self prepareFrameSize];
     [self prepareOffset];
     [self prepareContentFrame];
     [self setNeedsDisplay];
 }
 
-- (void)setTitleWithAnnotation:(id<MKAnnotation>)annotation {
+- (void)setTitleWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -122,9 +131,9 @@ CGFloat const kMultiRowCalloutCellGap = 3;
         _titleLabel.shadowOffset = CGSizeMake(0, -1);
         [self.contentView addSubview:_titleLabel];
     }
-    if (annotation && [annotation respondsToSelector:@selector(title)]) {
+    if (annotation) {
         _cellOffsetY = 35 + (2*kMultiRowCalloutCellGap);
-        _titleLabel.text = [annotation performSelector:@selector(title)];
+        _titleLabel.text = annotation.title;
         _titleLabel.hidden = NO;
     }
     else {
@@ -133,9 +142,9 @@ CGFloat const kMultiRowCalloutCellGap = 3;
     }
 }
 
-- (void)setCalloutCellsWithAnnotation:(id<MKAnnotation>)annotation {
-    if (annotation && [annotation respondsToSelector:@selector(calloutCells)])
-        [self setCalloutCells:[annotation performSelector:@selector(calloutCells)]];
+- (void)setCalloutCellsWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation {
+    if (annotation)
+        [self setCalloutCells:[annotation calloutCells]];
 }
 
 - (void)setCalloutCells:(NSArray *)calloutCells {
@@ -203,9 +212,10 @@ CGFloat const kMultiRowCalloutCellGap = 3;
     if (/*hitView == self.accessory*/ [hitView isKindOfClass:[UIButton class]]) {
         [self preventParentSelectionChange];
         [self performSelector:@selector(allowParentSelectionChange) withObject:nil afterDelay:1.0];
-        for (UIView *sibling in self.superview.subviews) {
-            if ([sibling isKindOfClass:[MKAnnotationView class]] && sibling != self.parentAnnotationView) {
-                ((MKAnnotationView *)sibling).enabled = NO;
+        for (UIView *aView in self.superview.subviews) {
+            if ([aView isKindOfClass:[MKAnnotationView class]] && aView != self.parentAnnotationView) {
+                MKAnnotationView *sibling = (MKAnnotationView *)aView;
+                sibling.enabled = NO;
                 [self performSelector:@selector(enableSibling:) withObject:sibling afterDelay:1.0];
             }
         }
@@ -213,20 +223,26 @@ CGFloat const kMultiRowCalloutCellGap = 3;
     return hitView;
 }
 
-- (void)enableSibling:(UIView *)sibling {
-    ((MKAnnotationView *)sibling).enabled = YES;
+- (void)enableSibling:(MKAnnotationView *)sibling {
+    sibling.enabled = YES;
 }
 
 - (void)preventParentSelectionChange {
-    GenericPinAnnotationView *parentView = (GenericPinAnnotationView *)self.parentAnnotationView;
-    parentView.preventSelectionChange = YES;
+    if (_parentAnnotationView && [_parentAnnotationView respondsToSelector:@selector(setPreventSelectionChange:)]) {
+        GenericPinAnnotationView *parentView = (GenericPinAnnotationView *)self.parentAnnotationView;
+        parentView.preventSelectionChange = YES;
+    }
 }
 
 - (void)allowParentSelectionChange {
+    if (!_mapView || !_parentAnnotationView)
+        return;
     //The MapView may think it has deselected the pin, so we should re-select it
     [self.mapView selectAnnotation:self.parentAnnotationView.annotation animated:NO];
-    GenericPinAnnotationView *parentView = (GenericPinAnnotationView *)self.parentAnnotationView;
-    parentView.preventSelectionChange = NO;
+    if ([_parentAnnotationView respondsToSelector:@selector(setPreventSelectionChange:)]) {
+        GenericPinAnnotationView *parentView = (GenericPinAnnotationView *)_parentAnnotationView;
+        parentView.preventSelectionChange = NO;
+    }
 }
 
 #pragma mark - Abstract Class Methods
@@ -236,6 +252,9 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 #define CalloutMapAnnotationViewHeightAboveParent 2.0f
 
 - (void)didMoveToSuperview {
+    [super didMoveToSuperview];
+    if (!_mapView)
+        return;
     [self adjustMapRegionIfNeeded];
     [self animateIn];
     [self setNeedsLayout];
@@ -262,6 +281,8 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 
     //if the pin is too close to the edge of the map view we need to shift the map view so the callout will fit.
 - (void)adjustMapRegionIfNeeded {
+    if (!_mapView)
+        return;
     
         //Longitude
     CGFloat xPixelShift = 0;
@@ -455,6 +476,8 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 }
 
 - (CGFloat)relativeParentXPosition {
+    if (!_mapView || !_parentAnnotationView)
+        return 0;
     CGPoint parentOrigin = [self.mapView convertPoint:self.parentAnnotationView.frame.origin fromView:self.parentAnnotationView.superview];
     return parentOrigin.x + self.offsetFromParent.x;
 }

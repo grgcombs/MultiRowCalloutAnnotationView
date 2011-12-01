@@ -14,16 +14,18 @@
 //
 //
 
+#import "MultiRowAnnotationProtocol.h"
 #import "MultiRowCalloutCell.h"
 
 @interface MultiRowCalloutAnnotationView : MKAnnotationView
-- (id)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block;
-- (void)preventParentSelectionChange;
-- (void)allowParentSelectionChange;
-- (void)enableSibling:(UIView *)sibling;
++ (MultiRowCalloutAnnotationView *)calloutWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block;
+- (id)initWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation reuseIdentifier:(NSString *)reuseIdentifier onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block;
 /* Callout cells are MultiRowCalloutCells.  If the annotation object responds to "calloutCells",
  this will be set automatically upon initialization */
 @property (nonatomic,retain) NSArray *calloutCells;
+@property (nonatomic,copy) MultiRowAccessoryTappedBlock onCalloutAccessoryTapped; // copied to cells
 @property (nonatomic,retain) MKAnnotationView *parentAnnotationView;
-@property (nonatomic,assign) MKMapView *mapView;
+@property (nonatomic,retain) MKMapView *mapView;
 @end
+
+extern NSString* const MultiRowCalloutReuseIdentifier;

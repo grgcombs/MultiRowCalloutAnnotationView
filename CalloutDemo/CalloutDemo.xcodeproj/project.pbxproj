@@ -11,6 +11,7 @@
 		3770F1201486DD2E00FD854B /* bluestar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3770F11C1486DD2E00FD854B /* bluestar@2x.png */; };
 		3770F1211486DD2E00FD854B /* redstar.png in Resources */ = {isa = PBXBuildFile; fileRef = 3770F11D1486DD2E00FD854B /* redstar.png */; };
 		3770F1221486DD2E00FD854B /* redstar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3770F11E1486DD2E00FD854B /* redstar@2x.png */; };
+		3770F14014875BB600FD854B /* MultiRowAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3770F13E14875BB600FD854B /* MultiRowAnnotation.m */; };
 		3780FB251486904F00CAA79B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3780FB241486904F00CAA79B /* UIKit.framework */; };
 		3780FB271486904F00CAA79B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3780FB261486904F00CAA79B /* Foundation.framework */; };
 		3780FB291486904F00CAA79B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3780FB281486904F00CAA79B /* CoreGraphics.framework */; };
@@ -35,6 +36,9 @@
 		3770F11C1486DD2E00FD854B /* bluestar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bluestar@2x.png"; sourceTree = "<group>"; };
 		3770F11D1486DD2E00FD854B /* redstar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redstar.png; sourceTree = "<group>"; };
 		3770F11E1486DD2E00FD854B /* redstar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "redstar@2x.png"; sourceTree = "<group>"; };
+		3770F13D14875BB600FD854B /* MultiRowAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiRowAnnotation.h; sourceTree = "<group>"; };
+		3770F13E14875BB600FD854B /* MultiRowAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiRowAnnotation.m; sourceTree = "<group>"; };
+		3770F13F14875BB600FD854B /* MultiRowAnnotationProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiRowAnnotationProtocol.h; sourceTree = "<group>"; };
 		3780FB201486904F00CAA79B /* CalloutDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CalloutDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3780FB241486904F00CAA79B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		3780FB261486904F00CAA79B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -162,6 +166,9 @@
 				3780FB52148694A500CAA79B /* MultiRowCalloutAnnotationView.m */,
 				3780FB53148694A500CAA79B /* MultiRowCalloutCell.h */,
 				3780FB54148694A500CAA79B /* MultiRowCalloutCell.m */,
+				3770F13D14875BB600FD854B /* MultiRowAnnotation.h */,
+				3770F13E14875BB600FD854B /* MultiRowAnnotation.m */,
+				3770F13F14875BB600FD854B /* MultiRowAnnotationProtocol.h */,
 			);
 			name = MultiRowCalloutAnnotationView;
 			path = ../MultiRowCalloutAnnotationView;
@@ -242,6 +249,7 @@
 				3780FB59148694A500CAA79B /* MultiRowCalloutCell.m in Sources */,
 				3780FB5C14869A9800CAA79B /* District.m in Sources */,
 				3780FB5F1486A1A700CAA79B /* Representative.m in Sources */,
+				3770F14014875BB600FD854B /* MultiRowAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,6 +341,7 @@
 				GCC_PREFIX_HEADER = "CalloutDemo/CalloutDemo-Prefix.pch";
 				INFOPLIST_FILE = "CalloutDemo/CalloutDemo-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -344,6 +353,7 @@
 				GCC_PREFIX_HEADER = "CalloutDemo/CalloutDemo-Prefix.pch";
 				INFOPLIST_FILE = "CalloutDemo/CalloutDemo-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
