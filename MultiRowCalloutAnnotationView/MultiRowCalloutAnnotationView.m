@@ -206,11 +206,10 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     UIView *hitView = [super hitTest:point withEvent:event];
-    
-    //If the accessory is hit, the map view may want to select an annotation sitting below it, so we must disable the other annotations
-    //But not the parent because that will screw up the selection
-    if (/*hitView == self.accessory*/ [hitView isKindOfClass:[UIButton class]]) {
+    //If the accessory is hit, the map view may want to select an annotation sitting below it, so we must disable the other annotations ... But not the parent because that will screw up the selection
+    if ([hitView isKindOfClass:[UIButton class]]) {
         [self preventParentSelectionChange];
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(allowParentSelectionChange) object:nil];
         [self performSelector:@selector(allowParentSelectionChange) withObject:nil afterDelay:1.0];
         for (UIView *aView in self.superview.subviews) {
             if ([aView isKindOfClass:[MKAnnotationView class]] && aView != self.parentAnnotationView) {
