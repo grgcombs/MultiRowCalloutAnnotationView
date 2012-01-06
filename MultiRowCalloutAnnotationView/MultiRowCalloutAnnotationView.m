@@ -39,7 +39,6 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 - (void)prepareFrameSize;
 - (void)prepareOffset;
 - (CGSize)contentSize;
-- (void)enableSibling:(MKAnnotationView *)sibling;
 - (void)preventParentSelectionChange;
 - (void)allowParentSelectionChange;
 
@@ -101,7 +100,10 @@ CGFloat const kMultiRowCalloutCellGap = 3;
     Block_release(_onCalloutAccessoryTapped);
     self.parentAnnotationView = nil;
     self.mapView = nil;
-    self.contentView = nil;
+    if (_contentView) {
+        [_contentView release];
+        _contentView = nil;
+    }
     [super dealloc];
 }
 
@@ -149,8 +151,6 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 
 - (void)setCalloutCells:(NSArray *)calloutCells {
     if (_calloutCells) {
-        for (MultiRowCalloutCell *cell in _calloutCells)
-            [cell removeFromSuperview];
         [_calloutCells release];
     }
     _calloutCells = [calloutCells retain];
@@ -204,42 +204,44 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 
 #pragma mark - Selection/Deselection
 
+#define GRGRunBlockAfterDelay(block,delay) dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC*delay), dispatch_get_current_queue(), block);
+
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     UIView *hitView = [super hitTest:point withEvent:event];
     //If the accessory is hit, the map view may want to select an annotation sitting below it, so we must disable the other annotations ... But not the parent because that will screw up the selection
     if ([hitView isKindOfClass:[UIButton class]]) {
         [self preventParentSelectionChange];
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(allowParentSelectionChange) object:nil];
-        [self performSelector:@selector(allowParentSelectionChange) withObject:nil afterDelay:1.0];
+        __block __typeof__(self) bself = self;
+        GRGRunBlockAfterDelay(^{
+            [bself allowParentSelectionChange];
+        },.8);
         for (UIView *aView in self.superview.subviews) {
             if ([aView isKindOfClass:[MKAnnotationView class]] && aView != self.parentAnnotationView) {
                 MKAnnotationView *sibling = (MKAnnotationView *)aView;
                 sibling.enabled = NO;
-                [self performSelector:@selector(enableSibling:) withObject:sibling afterDelay:1.0];
+                GRGRunBlockAfterDelay(^{
+                    sibling.enabled = YES;
+                },.8);
             }
         }
     }
     return hitView;
 }
 
-- (void)enableSibling:(MKAnnotationView *)sibling {
-    sibling.enabled = YES;
-}
-
 - (void)preventParentSelectionChange {
-    if (_parentAnnotationView && [_parentAnnotationView respondsToSelector:@selector(setPreventSelectionChange:)]) {
+    if (self.parentAnnotationView && [self.parentAnnotationView respondsToSelector:@selector(setPreventSelectionChange:)]) {
         GenericPinAnnotationView *parentView = (GenericPinAnnotationView *)self.parentAnnotationView;
         parentView.preventSelectionChange = YES;
     }
 }
 
 - (void)allowParentSelectionChange {
-    if (!_mapView || !_parentAnnotationView)
+    if (!self.mapView || !self.parentAnnotationView)
         return;
     //The MapView may think it has deselected the pin, so we should re-select it
     [self.mapView selectAnnotation:self.parentAnnotationView.annotation animated:NO];
-    if ([_parentAnnotationView respondsToSelector:@selector(setPreventSelectionChange:)]) {
-        GenericPinAnnotationView *parentView = (GenericPinAnnotationView *)_parentAnnotationView;
+    if ([self.parentAnnotationView respondsToSelector:@selector(setPreventSelectionChange:)]) {
+        GenericPinAnnotationView *parentView = (GenericPinAnnotationView *)self.parentAnnotationView;
         parentView.preventSelectionChange = NO;
     }
 }
@@ -252,8 +254,8 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];
-    if (!_mapView)
-        return;
+    if (!self.mapView || !self.superview)
+        return;  // superview can/will be nil during deallocation
     [self adjustMapRegionIfNeeded];
     [self animateIn];
     [self setNeedsLayout];
@@ -280,7 +282,7 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 
     //if the pin is too close to the edge of the map view we need to shift the map view so the callout will fit.
 - (void)adjustMapRegionIfNeeded {
-    if (!_mapView)
+    if (!self.mapView)
         return;
     
         //Longitude
@@ -312,7 +314,15 @@ CGFloat const kMultiRowCalloutCellGap = 3;
         
         CLLocationCoordinate2D newCenterCoordinate = {self.mapView.region.center.latitude + latitudinalShift, self.mapView.region.center.longitude + longitudinalShift};
         
+        @try {
+            if (CLLocationCoordinate2DIsValid(newCenterCoordinate))
         [self.mapView setCenterCoordinate:newCenterCoordinate animated:YES];
+        }
+        @catch (NSException *exception) {
+            NSLog(@"MultiRowCalloutAnnotationView: An elusive error occurred in adjustMapRegionIfNeeded() while setting mapview's center coordinate.  Coordinates: lat=%lf long=%lf  ... mapview = %@", newCenterCoordinate.latitude, newCenterCoordinate.longitude, self.mapView);
+            if (exception)
+                NSLog(@"Exception: %@", exception);
+        }
         
             //fix for now
         self.frame = CGRectMake(self.frame.origin.x - xPixelShift, self.frame.origin.y - yPixelShift, self.frame.size.width, self.frame.size.height);
@@ -322,12 +332,12 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 }
 
 - (CGFloat)xTransformForScale:(CGFloat)scale {
-    CGFloat xDistanceFromCenterToParent = self.endFrame.size.width / 2 - [self relativeParentXPosition];
+    CGFloat xDistanceFromCenterToParent = (self.endFrame.size.width / 2) - [self relativeParentXPosition];
     return (xDistanceFromCenterToParent * scale) - xDistanceFromCenterToParent;
 }
 
 - (CGFloat)yTransformForScale:(CGFloat)scale {
-    CGFloat yDistanceFromCenterToParent = (((self.endFrame.size.height) / 2) + self.offsetFromParent.y + CalloutMapAnnotationViewBottomShadowBufferSize + CalloutMapAnnotationViewHeightAboveParent);
+    CGFloat yDistanceFromCenterToParent = ((self.endFrame.size.height / 2) + self.offsetFromParent.y + CalloutMapAnnotationViewBottomShadowBufferSize + CalloutMapAnnotationViewHeightAboveParent);
     return yDistanceFromCenterToParent - yDistanceFromCenterToParent * scale;
 }
 

@@ -25,7 +25,7 @@
 @property (nonatomic,retain) NSArray *calloutCells;
 @property (nonatomic,copy) MultiRowAccessoryTappedBlock onCalloutAccessoryTapped; // copied to cells
 @property (nonatomic,retain) MKAnnotationView *parentAnnotationView;
-@property (nonatomic,retain) MKMapView *mapView;
+@property (nonatomic,assign) MKMapView *mapView;
 @end
 
 extern NSString* const MultiRowCalloutReuseIdentifier;
