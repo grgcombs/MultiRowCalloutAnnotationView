@@ -15,4 +15,5 @@
 
 @interface ViewController : UIViewController <MKMapViewDelegate>
 @property (nonatomic,retain) IBOutlet MKMapView *mapView;
+- (IBAction)changeMapType:(id)sender;
 @end

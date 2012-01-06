@@ -113,6 +113,13 @@
 
 #pragma mark - Boilerplate Stuff
 
+- (IBAction)changeMapType:(id)sender {
+    if (sender && [sender respondsToSelector:@selector(selectedSegmentIndex)]) {
+        NSInteger index = [sender selectedSegmentIndex];
+        self.mapView.mapType = index;
+    }
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
@@ -121,7 +128,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    if (self.mapView.annotations)
+    if (self.isViewLoaded && self.mapView && self.mapView.annotations)
         [_mapView removeAnnotations:_mapView.annotations];
 }
 
