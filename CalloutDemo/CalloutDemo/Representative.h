@@ -16,9 +16,9 @@
 @interface Representative : NSObject
 @property (nonatomic,copy) NSString *name;
 @property (nonatomic,copy) NSString *party;
-@property (nonatomic,retain) UIImage *image;
+@property (nonatomic,strong) UIImage *image;
 @property (nonatomic,copy) NSString *representativeID;
-@property (nonatomic,readonly) MultiRowCalloutCell *calloutCell;
+@property (unsafe_unretained, nonatomic,readonly) MultiRowCalloutCell *calloutCell;
 
 + (Representative *)representativeWithName:(NSString *)name party:(NSString *)party image:(UIImage *)image representativeID:(NSString *)representativeID;
 @end

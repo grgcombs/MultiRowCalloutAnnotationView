@@ -337,6 +337,7 @@
 		3780FB421486904F00CAA79B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CalloutDemo/CalloutDemo-Prefix.pch";
 				INFOPLIST_FILE = "CalloutDemo/CalloutDemo-Info.plist";
@@ -349,6 +350,7 @@
 		3780FB431486904F00CAA79B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CalloutDemo/CalloutDemo-Prefix.pch";
 				INFOPLIST_FILE = "CalloutDemo/CalloutDemo-Info.plist";

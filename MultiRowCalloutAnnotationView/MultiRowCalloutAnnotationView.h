@@ -22,10 +22,10 @@
 - (id)initWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation reuseIdentifier:(NSString *)reuseIdentifier onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block;
 /* Callout cells are MultiRowCalloutCells.  If the annotation object responds to "calloutCells",
  this will be set automatically upon initialization */
-@property (nonatomic,retain) NSArray *calloutCells;
+@property (nonatomic,strong) NSArray *calloutCells;
 @property (nonatomic,copy) MultiRowAccessoryTappedBlock onCalloutAccessoryTapped; // copied to cells
-@property (nonatomic,retain) MKAnnotationView *parentAnnotationView;
-@property (nonatomic,assign) MKMapView *mapView;
+@property (nonatomic,strong) MKAnnotationView *parentAnnotationView;
+@property (nonatomic,unsafe_unretained) MKMapView *mapView;
 @end
 
 extern NSString* const MultiRowCalloutReuseIdentifier;

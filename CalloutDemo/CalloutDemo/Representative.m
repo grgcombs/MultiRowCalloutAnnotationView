@@ -25,7 +25,7 @@
 @synthesize calloutCell = _calloutCell;
 
 + (Representative *)representativeWithName:(NSString *)name party:(NSString *)party image:(UIImage *)image representativeID:(NSString *)representativeID {
-    return [[[Representative alloc] initWithName:name party:party image:image representativeID:representativeID] autorelease];
+    return [[Representative alloc] initWithName:name party:party image:image representativeID:representativeID];
 }
 
 - (id)initWithName:(NSString *)name party:(NSString *)party image:(UIImage *)image representativeID:(NSString *)representativeID {
@@ -39,13 +39,6 @@
     return self;
 }
 
-- (void)dealloc {
-    self.name = nil;
-    self.party = nil;
-    self.image = nil;
-    self.representativeID = nil;
-    [super dealloc];
-}
 
 - (MultiRowCalloutCell *)calloutCell {
     return [MultiRowCalloutCell cellWithImage:_image 

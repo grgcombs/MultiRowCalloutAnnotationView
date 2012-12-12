@@ -24,7 +24,7 @@ NSString* const MultiRowCalloutReuseIdentifier = @"MultiRowCalloutReuse";
 CGFloat const kMultiRowCalloutCellGap = 3;
 
 @interface MultiRowCalloutAnnotationView()
-@property (nonatomic,retain) IBOutlet UILabel *titleLabel;
+@property (nonatomic,strong) IBOutlet UILabel *titleLabel;
 @property (nonatomic,assign) CGFloat cellInsetX;
 @property (nonatomic,assign) CGFloat cellOffsetY;
 - (void)setTitleWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation;
@@ -34,7 +34,7 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 @property (nonatomic,assign) CGFloat contentHeight;
 @property (nonatomic,assign) CGPoint offsetFromParent;
 @property (nonatomic,readonly) CGFloat yShadowOffset;
-@property (nonatomic,retain) UIView *contentView;
+@property (nonatomic,strong) UIView *contentView;
 - (void)prepareContentFrame;
 - (void)prepareFrameSize;
 - (void)prepareOffset;
@@ -73,7 +73,7 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 @synthesize xPixelShift = _xPixelShift;
 
 + (MultiRowCalloutAnnotationView *)calloutWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block {
-    return [[[MultiRowCalloutAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:MultiRowCalloutReuseIdentifier onCalloutAccessoryTapped:block] autorelease];
+    return [[MultiRowCalloutAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:MultiRowCalloutReuseIdentifier onCalloutAccessoryTapped:block];
 }
 
 - (id)initWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation reuseIdentifier:(NSString *)reuseIdentifier onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block {
@@ -100,15 +100,7 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 
 - (void)dealloc {
     self.calloutCells = nil;
-    self.titleLabel = nil;
-    Block_release(_onCalloutAccessoryTapped);
-    self.parentAnnotationView = nil;
     self.mapView = nil;
-    if (_contentView) {
-        [_contentView release];
-        _contentView = nil;
-    }
-    [super dealloc];
 }
 
 #pragma mark - Setters and Accessors
@@ -154,10 +146,7 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 }
 
 - (void)setCalloutCells:(NSArray *)calloutCells {
-    if (_calloutCells) {
-        [_calloutCells release];
-    }
-    _calloutCells = [calloutCells retain];
+    _calloutCells = calloutCells;
     if (calloutCells) {
         self.contentHeight = _cellOffsetY + ([calloutCells count] * (kMultiRowCalloutCellSize.height + kMultiRowCalloutCellGap));
         for (MultiRowCalloutCell *cell in calloutCells)
@@ -173,10 +162,9 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 
 - (void)setOnCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)onCalloutAccessoryTapped {
     if (_onCalloutAccessoryTapped) {
-        Block_release(_onCalloutAccessoryTapped);
         _onCalloutAccessoryTapped = nil;
     }
-    _onCalloutAccessoryTapped = Block_copy(onCalloutAccessoryTapped);
+    _onCalloutAccessoryTapped = onCalloutAccessoryTapped;
     [self copyAccessoryTappedBlockToCalloutCells];
 }
 

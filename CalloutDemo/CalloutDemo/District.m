@@ -34,7 +34,7 @@
 #pragma mark - The Good Stuff
 
 + (District *)districtWithCoordinate:(CLLocationCoordinate2D)coordinate title:(NSString *)title representatives:(NSArray *)representatives {
-    return [[[District alloc] initWithCoordinate:coordinate title:title representatives:representatives] autorelease];
+    return [[District alloc] initWithCoordinate:coordinate title:title representatives:representatives];
 }
 
 - (id)initWithCoordinate:(CLLocationCoordinate2D)coordinate title:(NSString *)title representatives:(NSArray *)representatives {
@@ -47,11 +47,6 @@
     return self;
 }
 
-- (void)dealloc {
-    self.title = nil;
-    self.representatives = nil;
-    [super dealloc];
-}
 
 - (NSArray *)calloutCells {
     if (!_representatives || [_representatives count] == 0)

@@ -17,11 +17,11 @@
 typedef void(^MultiRowAccessoryTappedBlock)(MultiRowCalloutCell *cell, UIControl *control, NSDictionary *userData);
 
 @interface MultiRowCalloutCell : UITableViewCell
-@property (nonatomic,retain) NSDictionary *userData;
+@property (nonatomic,strong) NSDictionary *userData;
 @property (nonatomic,copy) MultiRowAccessoryTappedBlock onCalloutAccessoryTapped;
-@property (nonatomic,assign) NSString *title;
-@property (nonatomic,assign) NSString *subtitle;
-@property (nonatomic,assign) UIImage *image;
+@property (nonatomic,unsafe_unretained) NSString *title;
+@property (nonatomic,unsafe_unretained) NSString *subtitle;
+@property (nonatomic,unsafe_unretained) UIImage *image;
 + (MultiRowCalloutCell *)cellWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData;
 + (MultiRowCalloutCell *)cellWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block;
 @end

@@ -17,8 +17,8 @@
 #import "MultiRowAnnotation.h"
 
 @interface ViewController()
-@property (nonatomic, retain) MKAnnotationView *selectedAnnotationView;
-@property (nonatomic,retain) MultiRowAnnotation *calloutAnnotation;
+@property (nonatomic, strong) MKAnnotationView *selectedAnnotationView;
+@property (nonatomic,strong) MultiRowAnnotation *calloutAnnotation;
 @end
 
 @implementation ViewController
@@ -26,12 +26,6 @@
 @synthesize calloutAnnotation = _calloutAnnotation;
 @synthesize selectedAnnotationView = _selectedAnnotationView;
 
-- (void)dealloc {
-    self.mapView = nil;
-    self.selectedAnnotationView = nil;
-    self.calloutAnnotation = nil;
-    [super dealloc];
-}
 
 - (void)viewDidUnload
 {

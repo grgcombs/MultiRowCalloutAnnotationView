@@ -16,8 +16,8 @@
 @interface District : NSObject <MultiRowAnnotationProtocol>
 @property (nonatomic,copy) NSString *title;
 @property (nonatomic,assign) CLLocationCoordinate2D coordinate;
-@property (nonatomic,readonly) NSArray *calloutCells; // MultiRowCalloutCells of representatives
-@property (nonatomic,retain) NSArray *representatives;
+@property (unsafe_unretained, nonatomic,readonly) NSArray *calloutCells; // MultiRowCalloutCells of representatives
+@property (nonatomic,strong) NSArray *representatives;
 + (District *)districtWithCoordinate:(CLLocationCoordinate2D)coordinate title:(NSString *)title representatives:(NSArray *)representatives;;
 + (District *)demoAnnotationFactory;
 @end

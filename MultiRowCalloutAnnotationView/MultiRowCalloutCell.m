@@ -25,7 +25,7 @@ CGSize const kMultiRowCalloutCellSize = {245,44};
 @synthesize onCalloutAccessoryTapped = _onCalloutAccessoryTapped;
 
 + (MultiRowCalloutCell *)cellWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block {
-    return [[[MultiRowCalloutCell alloc] initWithImage:image title:title subtitle:subtitle userData:userData onCalloutAccessoryTapped:block] autorelease];
+    return [[MultiRowCalloutCell alloc] initWithImage:image title:title subtitle:subtitle userData:userData onCalloutAccessoryTapped:block];
 }
 
 + (MultiRowCalloutCell *)cellWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData {
@@ -66,9 +66,7 @@ CGSize const kMultiRowCalloutCellSize = {245,44};
 }
 
 - (void)dealloc {
-    Block_release(_onCalloutAccessoryTapped);
-    self.userData = nil;
-    [super dealloc];
+    self.onCalloutAccessoryTapped = nil;
 }
 
 - (IBAction)calloutAccessoryTapped:(id)sender {
@@ -82,10 +80,9 @@ CGSize const kMultiRowCalloutCellSize = {245,44};
 
 - (void)setOnCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)onCalloutAccessoryTapped {
     if (_onCalloutAccessoryTapped) {
-        Block_release(_onCalloutAccessoryTapped);
         _onCalloutAccessoryTapped = nil;
     }
-    _onCalloutAccessoryTapped = Block_copy(onCalloutAccessoryTapped);
+    _onCalloutAccessoryTapped = onCalloutAccessoryTapped;
 }
 
 #pragma mark - Convenience Accessors
