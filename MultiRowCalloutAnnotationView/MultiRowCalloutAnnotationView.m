@@ -51,6 +51,9 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 - (void)animateInStepThree;
 - (CGFloat)relativeParentXPosition;
 - (void)adjustMapRegionIfNeeded;
+
+@property (nonatomic, assign) CGFloat xPixelShift;
+
 @end
 
 @implementation MultiRowCalloutAnnotationView
@@ -67,6 +70,7 @@ CGFloat const kMultiRowCalloutCellGap = 3;
 @synthesize yShadowOffset = _yShadowOffset;
 @synthesize offsetFromParent = _offsetFromParent;
 @synthesize contentHeight = _contentHeight;
+@synthesize xPixelShift = _xPixelShift;
 
 + (MultiRowCalloutAnnotationView *)calloutWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block {
     return [[[MultiRowCalloutAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:MultiRowCalloutReuseIdentifier onCalloutAccessoryTapped:block] autorelease];
@@ -286,11 +290,11 @@ CGFloat const kMultiRowCalloutCellGap = 3;
         return;
     
         //Longitude
-    CGFloat xPixelShift = 0;
+    self.xPixelShift = 0;
     if ([self relativeParentXPosition] < 38) {
-        xPixelShift = 38 - [self relativeParentXPosition];
+        self.xPixelShift = 38 - [self relativeParentXPosition];
     } else if ([self relativeParentXPosition] > self.frame.size.width - 38) {
-        xPixelShift = (self.frame.size.width - 38) - [self relativeParentXPosition];
+        self.xPixelShift = (self.frame.size.width - 38) - [self relativeParentXPosition];
     }
     
         //Latitude
@@ -305,11 +309,11 @@ CGFloat const kMultiRowCalloutCellGap = 3;
     }
     
         //Calculate new center point, if needed
-    if (xPixelShift || yPixelShift) {
+    if (self.xPixelShift || yPixelShift) {
         CGFloat pixelsPerDegreeLongitude = self.mapView.frame.size.width / self.mapView.region.span.longitudeDelta;
         CGFloat pixelsPerDegreeLatitude = self.mapView.frame.size.height / self.mapView.region.span.latitudeDelta;
         
-        CLLocationDegrees longitudinalShift = -(xPixelShift / pixelsPerDegreeLongitude);
+        CLLocationDegrees longitudinalShift = -(self.xPixelShift / pixelsPerDegreeLongitude);
         CLLocationDegrees latitudinalShift = yPixelShift / pixelsPerDegreeLatitude;
         
         CLLocationCoordinate2D newCenterCoordinate = {self.mapView.region.center.latitude + latitudinalShift, self.mapView.region.center.longitude + longitudinalShift};
@@ -325,9 +329,9 @@ CGFloat const kMultiRowCalloutCellGap = 3;
         }
         
             //fix for now
-        self.frame = CGRectMake(self.frame.origin.x - xPixelShift, self.frame.origin.y - yPixelShift, self.frame.size.width, self.frame.size.height);
+        self.frame = CGRectMake(self.frame.origin.x - self.xPixelShift, self.frame.origin.y - yPixelShift, self.frame.size.width, self.frame.size.height);
             //fix for later (after zoom or other action that resets the frame)
-        self.centerOffset = CGPointMake(self.centerOffset.x - xPixelShift, self.centerOffset.y);
+        self.centerOffset = CGPointMake(self.centerOffset.x - self.xPixelShift, self.centerOffset.y);
     }
 }
 
@@ -488,7 +492,7 @@ CGFloat const kMultiRowCalloutCellGap = 3;
     if (!_mapView || !_parentAnnotationView)
         return 0;
     CGPoint parentOrigin = [self.mapView convertPoint:self.parentAnnotationView.frame.origin fromView:self.parentAnnotationView.superview];
-    return parentOrigin.x + self.offsetFromParent.x;
+    return parentOrigin.x + self.offsetFromParent.x + self.xPixelShift;
 }
 
 - (UIView *)contentView {
