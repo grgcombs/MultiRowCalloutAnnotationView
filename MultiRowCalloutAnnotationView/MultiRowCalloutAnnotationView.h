@@ -18,8 +18,8 @@
 #import "MultiRowCalloutCell.h"
 
 @interface MultiRowCalloutAnnotationView : MKAnnotationView
-+ (MultiRowCalloutAnnotationView *)calloutWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block;
-- (id)initWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation reuseIdentifier:(NSString *)reuseIdentifier onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block;
++ (instancetype)calloutWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block;
+- (instancetype)initWithAnnotation:(id<MultiRowAnnotationProtocol>)annotation reuseIdentifier:(NSString *)reuseIdentifier onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block NS_DESIGNATED_INITIALIZER;
 /* Callout cells are MultiRowCalloutCells.  If the annotation object responds to "calloutCells",
  this will be set automatically upon initialization */
 @property (nonatomic,strong) NSArray *calloutCells;

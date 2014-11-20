@@ -13,6 +13,7 @@
 #import <Foundation/Foundation.h>
 
 @class MultiRowCalloutCell;
+
 @interface Representative : NSObject
 @property (nonatomic,copy) NSString *name;
 @property (nonatomic,copy) NSString *party;
@@ -20,5 +21,5 @@
 @property (nonatomic,copy) NSString *representativeID;
 @property (unsafe_unretained, nonatomic,readonly) MultiRowCalloutCell *calloutCell;
 
-+ (Representative *)representativeWithName:(NSString *)name party:(NSString *)party image:(UIImage *)image representativeID:(NSString *)representativeID;
++ (instancetype)representativeWithName:(NSString *)name party:(NSString *)party image:(UIImage *)image representativeID:(NSString *)representativeID;
 @end

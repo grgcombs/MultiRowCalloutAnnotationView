@@ -16,30 +16,31 @@
 CGSize const kMultiRowCalloutCellSize = {245,44};
 
 @interface MultiRowCalloutCell()
-- (id)initWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block;
+- (instancetype)initWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block;
 - (IBAction)calloutAccessoryTapped:(id)sender;
 @end
 
 @implementation MultiRowCalloutCell
-@synthesize userData = _userData;
-@synthesize onCalloutAccessoryTapped = _onCalloutAccessoryTapped;
 
-+ (MultiRowCalloutCell *)cellWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block {
++ (instancetype)cellWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block
+{
     return [[MultiRowCalloutCell alloc] initWithImage:image title:title subtitle:subtitle userData:userData onCalloutAccessoryTapped:block];
 }
 
-+ (MultiRowCalloutCell *)cellWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData {
++ (instancetype)cellWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData
+{
     return [MultiRowCalloutCell cellWithImage:image title:title subtitle:subtitle userData:userData onCalloutAccessoryTapped:nil];
 }
 
-- (id)initWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block {
+- (instancetype)initWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block {
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
-    if (self) {
-        self.onCalloutAccessoryTapped = block;
+    if (self)
+    {
+        _onCalloutAccessoryTapped = block;
+        _userData = userData;
         self.title = title;
         self.subtitle = subtitle;
         self.image = image;
-        self.userData = userData;
         self.opaque = YES;
         self.backgroundColor = [UIColor colorWithRed:116/255.f green:174/255.f blue:165/255.f alpha:1];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -65,49 +66,43 @@ CGSize const kMultiRowCalloutCellSize = {245,44};
     return self;
 }
 
-- (void)dealloc {
-    self.onCalloutAccessoryTapped = nil;
-}
-
-- (IBAction)calloutAccessoryTapped:(id)sender {
-    if (self.onCalloutAccessoryTapped)
-        _onCalloutAccessoryTapped(self, sender, self.userData);
-}
-
-#pragma mark - Block setters
-
-// NOTE: Sometimes see crashes when relying on just the copy property. Using Block_copy ensures correct behavior
-
-- (void)setOnCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)onCalloutAccessoryTapped {
-    if (_onCalloutAccessoryTapped) {
-        _onCalloutAccessoryTapped = nil;
+- (IBAction)calloutAccessoryTapped:(id)sender
+{
+    if (_onCalloutAccessoryTapped)
+    {
+        _onCalloutAccessoryTapped(self, sender, _userData);
     }
-    _onCalloutAccessoryTapped = onCalloutAccessoryTapped;
 }
 
 #pragma mark - Convenience Accessors
 
-- (UIImage *)image {
+- (UIImage *)image
+{
     return self.imageView.image;
 }
 
-- (void)setImage:(UIImage *)image {
+- (void)setImage:(UIImage *)image
+{
     self.imageView.image = image;
 }
 
-- (NSString *)title {
+- (NSString *)title
+{
     return self.textLabel.text;
 }
 
-- (void)setTitle:(NSString *)title {
+- (void)setTitle:(NSString *)title
+{
     self.textLabel.text = title;
 }
 
-- (NSString *)subtitle {
+- (NSString *)subtitle
+{
     return self.detailTextLabel.text;
 }
 
-- (void)setSubtitle:(NSString *)subtitle {
+- (void)setSubtitle:(NSString *)subtitle
+{
     self.detailTextLabel.text = subtitle;
 }
 

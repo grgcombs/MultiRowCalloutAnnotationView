@@ -13,35 +13,36 @@
 #import "MultiRowAnnotation.h"
 
 @implementation MultiRowAnnotation
-@synthesize title = _title;
-@synthesize coordinate = _coordinate;
-@synthesize calloutCells = _calloutCells;
 
-+ (MultiRowAnnotation *)annotationWithCoordinate:(CLLocationCoordinate2D)coordinate title:(NSString *)title calloutCells:(NSArray *)calloutCells {
++ (instancetype)annotationWithCoordinate:(CLLocationCoordinate2D)coordinate title:(NSString *)title calloutCells:(NSArray *)calloutCells
+{
     return [[MultiRowAnnotation alloc] initWithCoordinate:coordinate title:title calloutCells:calloutCells];
 }
 
-- (id)initWithCoordinate:(CLLocationCoordinate2D)coordinate title:(NSString *)title calloutCells:(NSArray *)calloutCells {
+- (instancetype)initWithCoordinate:(CLLocationCoordinate2D)coordinate title:(NSString *)title calloutCells:(NSArray *)calloutCells
+{
     self = [super init];
-    if (self) {
-        self.coordinate = coordinate;
-        self.title = title;
-        self.calloutCells = calloutCells;
+    if (self)
+    {
+        _coordinate = coordinate;
+        _title = title;
+        _calloutCells = calloutCells;
     }
     return self;
 }
 
 
     // For selection/deselection of the callout in the map view controller, we need to make a copy of the annotation
-- (id)copyWithZone:(NSZone *)zone {
-    MultiRowAnnotation *objectCopy = [[MultiRowAnnotation allocWithZone:zone] initWithCoordinate:_coordinate title:_title calloutCells:_calloutCells];
-    return objectCopy;
+- (id)copyWithZone:(NSZone *)zone
+{
+    return [[MultiRowAnnotation allocWithZone:zone] initWithCoordinate:_coordinate title:_title calloutCells:_calloutCells];
 }
 
-- (void)copyAttributesFromAnnotation:(NSObject <MultiRowAnnotationProtocol> *)annotation {
-    self.coordinate = annotation.coordinate;
-    self.title = annotation.title;
-    self.calloutCells = [annotation calloutCells];
+- (void)copyAttributesFromAnnotation:(NSObject <MultiRowAnnotationProtocol> *)annotation
+{
+    _coordinate = annotation.coordinate;
+    _title = [annotation.title copy];
+    _calloutCells = [annotation calloutCells];
 }
 
 @end

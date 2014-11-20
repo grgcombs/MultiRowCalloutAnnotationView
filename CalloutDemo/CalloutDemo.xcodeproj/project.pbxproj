@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		372F011C1A1DA8020075D7A5 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 372F011B1A1DA8020075D7A5 /* Default-568h@2x.png */; };
 		3770F11F1486DD2E00FD854B /* bluestar.png in Resources */ = {isa = PBXBuildFile; fileRef = 3770F11B1486DD2E00FD854B /* bluestar.png */; };
 		3770F1201486DD2E00FD854B /* bluestar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3770F11C1486DD2E00FD854B /* bluestar@2x.png */; };
 		3770F1211486DD2E00FD854B /* redstar.png in Resources */ = {isa = PBXBuildFile; fileRef = 3770F11D1486DD2E00FD854B /* redstar.png */; };
@@ -32,6 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		372F011B1A1DA8020075D7A5 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		3770F11B1486DD2E00FD854B /* bluestar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bluestar.png; sourceTree = "<group>"; };
 		3770F11C1486DD2E00FD854B /* bluestar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bluestar@2x.png"; sourceTree = "<group>"; };
 		3770F11D1486DD2E00FD854B /* redstar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redstar.png; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 		3780FB151486904F00CAA79B = {
 			isa = PBXGroup;
 			children = (
+				372F011B1A1DA8020075D7A5 /* Default-568h@2x.png */,
 				3780FB4A148694A500CAA79B /* MultiRowCalloutAnnotationView */,
 				3780FB2A1486904F00CAA79B /* CalloutDemo */,
 				3780FB231486904F00CAA79B /* Frameworks */,
@@ -200,7 +203,7 @@
 		3780FB171486904F00CAA79B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0610;
 			};
 			buildConfigurationList = 3780FB1A1486904F00CAA79B /* Build configuration list for PBXProject "CalloutDemo" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -229,6 +232,7 @@
 				3780FB3E1486904F00CAA79B /* ViewController_iPad.xib in Resources */,
 				3770F11F1486DD2E00FD854B /* bluestar.png in Resources */,
 				3770F1201486DD2E00FD854B /* bluestar@2x.png in Resources */,
+				372F011C1A1DA8020075D7A5 /* Default-568h@2x.png in Resources */,
 				3770F1211486DD2E00FD854B /* redstar.png in Resources */,
 				3770F1221486DD2E00FD854B /* redstar@2x.png in Resources */,
 			);
@@ -287,12 +291,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					armv7,
-				);
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -301,11 +309,17 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -315,18 +329,27 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					armv7,
-				);
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -340,6 +363,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CalloutDemo/CalloutDemo-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				INFOPLIST_FILE = "CalloutDemo/CalloutDemo-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -353,6 +377,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CalloutDemo/CalloutDemo-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				INFOPLIST_FILE = "CalloutDemo/CalloutDemo-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";

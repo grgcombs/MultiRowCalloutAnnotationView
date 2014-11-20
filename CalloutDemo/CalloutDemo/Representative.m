@@ -13,38 +13,36 @@
 #import "Representative.h"
 #import "MultiRowCalloutCell.h"
 
-@interface Representative()
-- (id)initWithName:(NSString *)name party:(NSString *)party image:(UIImage *)image representativeID:(NSString *)representativeID;
-@end
-    
 @implementation Representative
-@synthesize name = _name;
-@synthesize party = _party;
-@synthesize image = _image;
-@synthesize representativeID = _representativeID;
-@synthesize calloutCell = _calloutCell;
 
-+ (Representative *)representativeWithName:(NSString *)name party:(NSString *)party image:(UIImage *)image representativeID:(NSString *)representativeID {
++ (instancetype)representativeWithName:(NSString *)name party:(NSString *)party image:(UIImage *)image representativeID:(NSString *)representativeID
+{
     return [[Representative alloc] initWithName:name party:party image:image representativeID:representativeID];
 }
 
-- (id)initWithName:(NSString *)name party:(NSString *)party image:(UIImage *)image representativeID:(NSString *)representativeID {
+- (instancetype)initWithName:(NSString *)name party:(NSString *)party image:(UIImage *)image representativeID:(NSString *)representativeID
+{
     self = [super init];
-    if (self) {
-        self.name = name;
-        self.party = party;
-        self.image = image;
-        self.representativeID = representativeID;
+    if (self)
+    {
+        _name = name;
+        _party = party;
+        _image = image;
+        _representativeID = representativeID;
     }
     return self;
 }
 
 
-- (MultiRowCalloutCell *)calloutCell {
+- (MultiRowCalloutCell *)calloutCell
+{
+    NSDictionary *dict = nil;
+    if (_representativeID)
+        dict = @{@"id": _representativeID};
     return [MultiRowCalloutCell cellWithImage:_image 
                                         title:_party 
                                      subtitle:_name 
-                                     userData:[NSDictionary dictionaryWithObject:_representativeID forKey:@"id"]];
+                                     userData:dict];
 }
 
 @end

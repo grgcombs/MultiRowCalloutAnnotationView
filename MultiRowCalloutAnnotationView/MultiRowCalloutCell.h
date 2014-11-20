@@ -22,8 +22,8 @@ typedef void(^MultiRowAccessoryTappedBlock)(MultiRowCalloutCell *cell, UIControl
 @property (nonatomic,unsafe_unretained) NSString *title;
 @property (nonatomic,unsafe_unretained) NSString *subtitle;
 @property (nonatomic,unsafe_unretained) UIImage *image;
-+ (MultiRowCalloutCell *)cellWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData;
-+ (MultiRowCalloutCell *)cellWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block;
++ (instancetype)cellWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData;
++ (instancetype)cellWithImage:(UIImage *)image title:(NSString *)title subtitle:(NSString *)subtitle userData:(NSDictionary *)userData onCalloutAccessoryTapped:(MultiRowAccessoryTappedBlock)block;
 @end
 
 extern CGSize const kMultiRowCalloutCellSize;

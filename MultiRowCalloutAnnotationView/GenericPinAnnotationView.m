@@ -15,22 +15,26 @@
 NSString* const GenericPinReuseIdentifier = @"GenericPinReuse";
 
 @implementation GenericPinAnnotationView
-@synthesize preventSelectionChange = _preventSelectionChange;
 
-+ (GenericPinAnnotationView*)pinViewWithAnnotation:(NSObject <MKAnnotation> *)annotation {
++ (instancetype)pinViewWithAnnotation:(NSObject <MKAnnotation> *)annotation
+{
     return [[GenericPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:GenericPinReuseIdentifier];
 }
 
-- (id)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier {
+- (instancetype)initWithAnnotation:(id<MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier
+{
     self = [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
-    if (self) {
+    if (self)
+    {
         self.canShowCallout = NO;
     }
     return self;
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    if (!self.preventSelectionChange) {
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+    if (!_preventSelectionChange)
+    {
         [super setSelected:selected animated: animated];
     }
 }

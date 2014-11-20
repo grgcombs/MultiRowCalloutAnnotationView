@@ -17,7 +17,7 @@
 @property (nonatomic,copy) NSString *title;
 @property (nonatomic,copy) NSArray *calloutCells; // MultiRowCalloutCells
 
-+ (MultiRowAnnotation *)annotationWithCoordinate:(CLLocationCoordinate2D)coordinate title:(NSString *)title calloutCells:(NSArray *)calloutCells;
-- (id)initWithCoordinate:(CLLocationCoordinate2D)coordinate title:(NSString *)title calloutCells:(NSArray *)calloutCells;
++ (instancetype)annotationWithCoordinate:(CLLocationCoordinate2D)coordinate title:(NSString *)title calloutCells:(NSArray *)calloutCells;
+- (instancetype)initWithCoordinate:(CLLocationCoordinate2D)coordinate title:(NSString *)title calloutCells:(NSArray *)calloutCells NS_DESIGNATED_INITIALIZER;
 - (void)copyAttributesFromAnnotation:(NSObject <MultiRowAnnotationProtocol> *)annotation;
 @end
