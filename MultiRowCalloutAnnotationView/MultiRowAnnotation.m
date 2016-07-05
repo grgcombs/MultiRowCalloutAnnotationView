@@ -31,7 +31,6 @@
     return self;
 }
 
-
     // For selection/deselection of the callout in the map view controller, we need to make a copy of the annotation
 - (id)copyWithZone:(NSZone *)zone
 {

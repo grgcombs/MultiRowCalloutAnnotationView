@@ -10,6 +10,8 @@
 //
 //
 
+#import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
 
 @protocol MultiRowAnnotationProtocol <NSObject,MKAnnotation>

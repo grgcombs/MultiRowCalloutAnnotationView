@@ -18,6 +18,7 @@
 #import "GenericPinAnnotationView.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
+#import <Foundation/Foundation.h>
 
 NSString* const MultiRowCalloutReuseIdentifier = @"MultiRowCalloutReuse";
 CGFloat const kMultiRowCalloutCellGap = 3;
